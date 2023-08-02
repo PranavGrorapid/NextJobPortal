@@ -8,4 +8,10 @@ module.exports = {
     experimental: {
       serverComponentsExternalPackages: ["mongoose"],
     },
+
+    env: {
+    NEXT_PUBLIC_DISABLE_SERVICE_WORKER: process.env.NODE_ENV === 'development',
+  },
   };
+
+

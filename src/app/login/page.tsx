@@ -1,7 +1,62 @@
-import React from 'react'
+
+"use client";
+
+import React, { useState } from 'react'
 import Link from 'next/link'
+import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+
 
 const Login = () => {
+
+
+  const router=useRouter()
+
+  const [user,setUser]=useState(
+      {
+         
+          email:'',
+          password:'',
+         
+      }
+   )
+
+   const [buttonDisabled,setButtonDisabled]=useState(true)
+  const [loading,setLoading]=useState(false)
+
+
+
+  const handleSubmit=async(e:any)=>{
+
+    try{
+
+   e.preventDefault()
+    console.log('signup',user)
+     setLoading(true)
+   const {data}=await axios.post('/api/users/login',user)
+   console.log('data',data)
+   setLoading(false)
+   
+   
+   toast.success('user login successfully')
+    router.push('/') 
+
+    }
+
+    catch(err:any){
+
+        console.log(err)
+        toast.error( err ? err.response.data.error : err.message)     
+
+    }   
+
+    finally{
+ 
+       setLoading(false)
+    }
+
+}
  
     return (
 
@@ -15,8 +70,10 @@ const Login = () => {
                 RecruitYes <span className='text-blue-500'>Login</span>
             </div>
 
+            <Toaster />
 
-      <form action="">
+
+      <form  onSubmit={handleSubmit}>
 
      
 
@@ -24,7 +81,7 @@ const Login = () => {
                 <label htmlFor="Email" className='font-bold'>Email</label>
                 </div>
                 <div>
-                <input className='bg-gray-50 border-2 mt-1 border-black w-full h-10' />
+                <input className='bg-gray-50 border-2 mt-1 border-black w-full h-10' onChange={(e)=>setUser({...user,email:e.target.value})} />
                 </div>
 
 
@@ -32,7 +89,7 @@ const Login = () => {
                 <label htmlFor="Password" className='font-bold'>Password</label>
                 </div>
                 <div>
-                <input className='bg-gray-50 border-2 mt-1 border-black  w-full h-10' />
+                <input className='bg-gray-50 border-2 mt-1 border-black  w-full h-10'  onChange={(e)=>setUser({...user,password:e.target.value})}  />
                 </div>
 
                 <div className='mt-5'>
